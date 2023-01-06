@@ -1,5 +1,6 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import {load} from 'ts-dotenv';
+
+const env = load({ADAPTER: String});
 
 import adapterAuto from '@sveltejs/adapter-auto';
 import adapterNode from '@sveltejs/adapter-node';
@@ -13,7 +14,7 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: process.env.ADAPTER === 'node' ? adapterNode({ out: 'dist' }) : adapterAuto()
+		adapter: env.ADAPTER === 'node' ? adapterNode({ out: 'dist' }) : adapterAuto()
 	}
 };
 

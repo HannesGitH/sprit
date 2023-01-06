@@ -5,13 +5,13 @@
 	"scripts": {
 		"dev": "vite dev --host",
 		"build": "vite build",
-		"build:node": "cross-env ADAPTER=node && vite build",
+		"build:node": "export ADAPTER=node && vite build",
 		"preview": "vite preview",
-		"test": "playwright test",
+		"test": "source mock.sh && playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test:unit": "vitest",
-		"coverage": "vitest run --coverage",
+		"test:unit": "source mock.sh && vitest",
+		"coverage": "source mock.sh && vitest run --coverage",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"prepare": "is-ci || husky install"
@@ -41,8 +41,6 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-node": "^1.0.0",
-		"cross-env": "^7.0.3",
-		"dotenv": "^16.0.3",
-		"sdmx-rest": "^2.20.0"
+		"ts-dotenv": "^0.9.0"
 	}
 }
