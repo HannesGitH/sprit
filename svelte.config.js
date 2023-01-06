@@ -1,6 +1,6 @@
-import {load} from 'ts-dotenv';
+import { load } from 'ts-dotenv';
 
-const env = load({ADAPTER: String});
+const env = load({ ADAPTER: String });
 
 import adapterAuto from '@sveltejs/adapter-auto';
 import adapterNode from '@sveltejs/adapter-node';
