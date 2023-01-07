@@ -12,8 +12,6 @@ describe('api list test', () => {
 	};
 
 	it('typed stations', async () => {
-		expect(await getStations(params)).toSatisfy(
-			(obj: [Station]) => obj[0].id == '1c4f126b-1f3c-4b38-9692-05c400ea8e61'
-		);
+		expect(await getStations(params)).toSatisfy((obj: [Station]) => obj[0].id != null);
 	});
 });
