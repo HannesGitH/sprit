@@ -56,6 +56,9 @@ export type Station = SinglePriceStation | MultiplePriceStation;
 
 export const getStations = async (params: StationParams): Promise<[Station]> => {
 	const response = await getList(params);
+	if (!response.ok) {
+		throw new Error(response.message);
+	}
 	return response.stations;
 };
 
