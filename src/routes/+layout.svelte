@@ -4,7 +4,9 @@
 
 <Navbar />
 
-<p>Daten wurden von tankerkoenig.de bereitgestellt</p>
+<slot />
+
+<footer />
 
 <style lang="scss">
 	@import url('https://fonts.cdnfonts.com/css/ostrich-sans-2');

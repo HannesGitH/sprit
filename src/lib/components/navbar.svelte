@@ -18,7 +18,7 @@
 	tabindex="0"
 	style="
 	width: {open ? 10 : 3}rem;
-	height: {open ? 6 * 2 : 3}rem;
+	height: {open ? 6 * 3 : 3}rem;
 	"
 >
 	<svg
@@ -42,8 +42,9 @@
 	</svg>
 	{#if open}
 		<div id="menu" transition:fly={{ x: -200, duration: 100 }}>
-			<a href="/settings">settings</a>
 			<a href="/">home</a>
+			<a href="/settings">settings</a>
+			<a href="/info">info</a>
 		</div>
 	{/if}
 </div>
@@ -102,7 +103,8 @@
 
 		#menu {
 			a {
-				margin: 0.5rem 1rem 0 0;
+				transition: all 0.1s ease-in-out;
+				margin: 0.5rem 2rem 0 0;
 				padding: 1rem;
 				background-color: $primary;
 				top: 1rem;
@@ -113,8 +115,9 @@
 				display: block;
 				color: black;
 				text-decoration: none;
+				font-weight: bold;
 				&:hover {
-					font-weight: bold;
+					margin: 0.5rem 1rem 0 0;
 				}
 			}
 		}
