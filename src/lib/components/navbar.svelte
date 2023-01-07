@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition';
 	let open = false;
 	let onClick = (): void => {
 		open = !open;
 	};
 	let ariaLabel = 'toggle menu';
-	let width: string | number = 40;
+	let width: string | number = '3rem';
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -15,6 +16,10 @@
 	aria-label={ariaLabel}
 	role="button"
 	tabindex="0"
+	style="
+	width: {open ? 10 : 3}rem;
+	height: {open ? 6 * 2 : 3}rem;
+	"
 >
 	<svg
 		class:open
@@ -35,6 +40,12 @@
 			d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20"
 		/>
 	</svg>
+	{#if open}
+		<div id="menu" transition:fly={{ x: -200, duration: 100 }}>
+			<a href="/settings">settings</a>
+			<a href="/">home</a>
+		</div>
+	{/if}
 </div>
 
 <style lang="scss">
@@ -45,8 +56,6 @@
 		position: fixed;
 		top: 1rem;
 		left: 0;
-		width: 3rem;
-		height: 3rem;
 		border-top-right-radius: 1rem;
 		border-bottom-right-radius: 1rem;
 		@include glass($elevation: 1);
@@ -64,9 +73,6 @@
 
 		@include button-destyle;
 		cursor: pointer;
-		display: flex;
-		align-items: center;
-		overflow: hidden;
 		svg {
 			color: color.scale($primary, $lightness: -50%);
 			transition: transform $transition-duration;
@@ -91,6 +97,25 @@
 			}
 			.middle {
 				transform: rotate(90deg);
+			}
+		}
+
+		#menu {
+			a {
+				margin: 0.5rem 1rem 0 0;
+				padding: 1rem;
+				background-color: $primary;
+				top: 1rem;
+				left: 0;
+				border-top-right-radius: 1rem;
+				border-bottom-right-radius: 1rem;
+				display: block;
+				display: block;
+				color: black;
+				text-decoration: none;
+				&:hover {
+					font-weight: bold;
+				}
 			}
 		}
 	}
