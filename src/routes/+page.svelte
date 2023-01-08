@@ -1,15 +1,19 @@
 <script lang="ts">
 	import Map from '$lib/components/map.svelte';
 	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
+	import { start as getPosition, position } from '$lib/helpers/position';
+
+	export let watchLocation = false;
+
 	export let data: PageData;
 
-	// import Geolocation from "svelte-geolocation";
-
-	let coords: [longitude: number, latitude: number];
+	onMount(() => {
+		getPosition();
+	});
 </script>
 
 <div id="map">
-	<!-- <Geolocation getPosition bind:coords /> -->
 	<Map api_key={data.mapbox_api_key} />
 </div>
 
