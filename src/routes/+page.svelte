@@ -3,17 +3,9 @@
 	import GlassSideButton from '$lib/components/glassSideButton.svelte';
 
 	import type { PageData } from './$types';
-	import { onMount } from 'svelte';
-	import { start as getPosition, position } from '$lib/helpers/position';
 	import { isPositionKnown, toggle as togglePosition } from '$lib/helpers/position';
 
-	export let watchLocation = false;
-
 	export let data: PageData;
-
-	onMount(() => {
-		getPosition();
-	});
 
 	let rotation = 0;
 	let setRotation: (value: number) => void;

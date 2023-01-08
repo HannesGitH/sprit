@@ -4,6 +4,10 @@
 
 <svelte:head>
 	<title>Sprit</title>
+	<meta
+		name="description"
+		content="Preisvergleich verschiedener in der Nähe liegender Tankstellen, by hannepps/hannesgith"
+	/>
 
 	<link
 		rel="stylesheet"
