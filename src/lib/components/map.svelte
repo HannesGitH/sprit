@@ -32,14 +32,14 @@
 		});
 	});
 
-	$: {
-		if ($isPositionKnown && userLocationMarker) {
-			userLocationMarker.setLngLat([$position.lng, $position.lat]);
+	isPositionKnown.subscribe((value) => {
+		if (value && map) {
 			map.panTo([$position.lng, $position.lat]);
 			map.setCenter([$position.lng, $position.lat]);
 			map.zoomTo(12);
 		}
-	}
+	});
+	$: userLocationMarker && userLocationMarker.setLngLat([$position.lng, $position.lat]);
 </script>
 
 <svelte:head>
@@ -59,7 +59,7 @@
 		width: 100%;
 		height: 100%;
 	}
-	$user-location-color: color.scale($primary, $lightness: -50%);
+	$user-location-color: $primary-darker;
 
 	#positionmarker {
 		position: absolute;

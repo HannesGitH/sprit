@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { derived, writable } from 'svelte/store';
 
 export type Position = {
 	lat: number;
@@ -8,9 +8,11 @@ export type Position = {
 
 const unknownPosition: Position = { lat: 0, lng: 0, lastUpdatedTimeStamp: -1 };
 export const position = writable(unknownPosition);
-export const isPositionKnown = writable(false);
+export const isPositionKnown = derived(position, ($position) => {
+	return $position.lastUpdatedTimeStamp > 0;
+});
 
-let watchId: number;
+let watchId: number | null = null;
 
 export const start = (watch = true) => {
 	if (navigator.geolocation) {
@@ -20,7 +22,6 @@ export const start = (watch = true) => {
 				lng: pos.coords.longitude,
 				lastUpdatedTimeStamp: pos.timestamp
 			});
-			isPositionKnown.set(true);
 		};
 		const errCB = (err: GeolocationPositionError) => {
 			console.error(err);
@@ -31,11 +32,11 @@ export const start = (watch = true) => {
 };
 
 export const stop = () => {
-	if (navigator.geolocation) {
-		navigator.geolocation.clearWatch(watchId);
+	if (navigator.geolocation && watchId) {
+		navigator.geolocation.clearWatch(watchId!);
 		position.set(unknownPosition);
-		isPositionKnown.set(false);
 	}
+	watchId = null;
 };
 
 export const toggle = () => {

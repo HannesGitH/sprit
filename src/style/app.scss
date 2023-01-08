@@ -1,3 +1,4 @@
+@use 'sass:color';
 @mixin glass($elevation: 1) {
 	$blur-radius: 5px * $elevation;
 	$spread-radius: 1px * $elevation;
@@ -19,6 +20,7 @@
 }
 
 $primary: #39ff6e;
+$primary-darker: color.scale($primary, $lightness: -50%);
 
 $accent: #d50000;
 

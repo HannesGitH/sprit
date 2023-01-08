@@ -75,7 +75,7 @@
 
 		cursor: pointer;
 		svg {
-			color: color.scale($primary, $lightness: -50%);
+			color: $primary-darker;
 			transition: transform $transition-duration;
 		}
 		.top {
@@ -106,7 +106,7 @@
 				transition: all 0.1s ease-in-out;
 				margin: 0.5rem 2rem 0 0;
 				padding: 1rem;
-				background-color: color.scale($primary, $lightness: -50%);
+				background-color: $primary-darker;
 				top: 1rem;
 				left: 0;
 				border-top-right-radius: 1rem;
