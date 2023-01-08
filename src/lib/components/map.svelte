@@ -2,6 +2,9 @@
 	export let api_key: string;
 
 	export let rotation = 0;
+	export const setRotation = (value: number) => {
+		map && map.rotateTo(value);
+	};
 
 	import { position, isPositionKnown } from '$lib/helpers/position';
 

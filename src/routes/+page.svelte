@@ -16,10 +16,11 @@
 	});
 
 	let rotation = 0;
+	let setRotation: (value: number) => void;
 </script>
 
 <div id="map">
-	<Map api_key={data.mapbox_api_key} bind:rotation />
+	<Map api_key={data.mapbox_api_key} bind:rotation bind:setRotation />
 </div>
 
 <GlassSideButton
@@ -33,15 +34,29 @@
 	</div>
 </GlassSideButton>
 
+<GlassSideButton
+	side="right"
+	top="5rem"
+	onClick={() => {
+		setRotation(0);
+	}}
+>
+	<div id="compass">
+		<span class="material-symbols-outlined" style="--direction: {-rotation}deg;"> north </span>
+	</div>
+</GlassSideButton>
+
 <style lang="scss">
 	#map {
 		width: 100vw;
 		height: 100vh;
 	}
-	#location-activate-button {
+	#location-activate-button,
+	#compass {
 		width: 3rem;
 		height: 3rem;
 		position: relative;
+		color: gray;
 		> * {
 			position: absolute;
 			top: 50%;
@@ -49,9 +64,15 @@
 			transform: translate(-50%, -50%);
 		}
 	}
+	#compass {
+		> * {
+			// rotate: var(--direction);
+			transform: translate(-50%, -50%) rotate(var(--direction));
+		}
+		color: $primary-darker;
+	}
 	.material-symbols-outlined {
 		font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 48;
-		color: gray;
 		&.active {
 			font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 48;
 			color: $primary-darker;
