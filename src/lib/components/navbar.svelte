@@ -106,14 +106,14 @@
 				transition: all 0.1s ease-in-out;
 				margin: 0.5rem 2rem 0 0;
 				padding: 1rem;
-				background-color: $primary;
+				background-color: color.scale($primary, $lightness: -50%);
 				top: 1rem;
 				left: 0;
 				border-top-right-radius: 1rem;
 				border-bottom-right-radius: 1rem;
 				display: block;
 				display: block;
-				color: black;
+				color: white;
 				text-decoration: none;
 				font-weight: bold;
 				&:hover {
