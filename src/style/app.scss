@@ -1,11 +1,11 @@
 @mixin glass($elevation: 1) {
 	$blur-radius: 5px * $elevation;
 	$spread-radius: 1px * $elevation;
-	background: rgba(255, 255, 255, 0.2);
+	background: rgba(255, 255, 255, 0.23);
 	backdrop-filter: blur($blur-radius);
 	-webkit-backdrop-filter: blur($blur-radius);
 	box-shadow: 0 4px $blur-radius $spread-radius rgba(0, 0, 0, 0.1);
-	border: 1px solid rgba(255, 255, 255, 0.26);
+	// border: 1px solid rgba(255, 255, 255, 0.26);
 }
 
 @mixin button-destyle {

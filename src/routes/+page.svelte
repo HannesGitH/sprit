@@ -1,22 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import mapboxgl from 'mapbox-gl';
+	import Map from '$lib/components/map.svelte';
 	import type { PageData } from './$types';
 	export let data: PageData;
-
-	onMount(() => {
-		mapboxgl.accessToken = data.mapbox_api_key;
-		const map = new mapboxgl.Map({
-			container: 'map', // container ID
-			style: 'mapbox://styles/mapbox/streets-v12', // style URL
-			center: [-74.5, 40], // starting position [lng, lat]
-			zoom: 9 // starting zoom
-		});
-	});
 </script>
 
-<svelte:head>
-	<link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet" />
-</svelte:head>
+<div id="map">
+	<Map api_key={data.mapbox_api_key} />
+</div>
 
-<div id="map" />
+<style>
+	#map {
+		width: 100vw;
+		height: 100vh;
+	}
+</style>

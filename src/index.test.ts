@@ -16,4 +16,8 @@ describe('.env loading', () => {
 		denv.config();
 		expect(process.env.mapbox_api_key).toBeDefined();
 	});
+	// it('loads .env', () => {
+	// 	const env = require('ts-dotenv').load({});                      //already fails here if i .load({api_key : String})
+	// 	expect(env.mapbox_api_key).toBeDefined();              //FAILS
+	//   });
 });

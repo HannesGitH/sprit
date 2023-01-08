@@ -54,25 +54,25 @@
 
 	$transition-duration: 400ms;
 	#burger-menu {
+		@include button-destyle;
 		position: fixed;
 		top: 1rem;
 		left: 0;
 		border-top-right-radius: 1rem;
 		border-bottom-right-radius: 1rem;
-		@include glass($elevation: 1);
+		@include glass($elevation: 1.5);
 		transition: all 0.1s ease-in-out;
 		&:hover {
-			@include glass($elevation: 2);
+			@include glass($elevation: 2.2);
 			border: none;
 			transform: scale(1.01);
 		}
 		&:active {
-			@include glass($elevation: 2.5);
+			@include glass($elevation: 2.8);
 			border: none;
 			transform: scale(1.02);
 		}
 
-		@include button-destyle;
 		cursor: pointer;
 		svg {
 			color: color.scale($primary, $lightness: -50%);
