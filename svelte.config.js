@@ -26,7 +26,7 @@ const config = {
 	],
 
 	kit: {
-		adapter: env.ADAPTER === 'node' ? adapterNode({ out: 'dist' }) : adapterAuto()
+		adapter: env.ADAPTER == 'node' ? adapterNode({ out: 'dist' }) : adapterAuto()
 	}
 };
 
