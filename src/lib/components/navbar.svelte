@@ -42,9 +42,9 @@
 	</svg>
 	{#if open}
 		<div id="menu" transition:fly={{ x: -200, duration: 100 }}>
-			<a href="/">home</a>
-			<a href="/settings">settings</a>
-			<a href="/info">info</a>
+			<a href="/">Home</a>
+			<a href="/settings">Settings</a>
+			<a href="/info">Info</a>
 		</div>
 	{/if}
 </div>
