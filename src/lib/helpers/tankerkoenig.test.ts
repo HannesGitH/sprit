@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { getStations, type Station, type StationParams } from './tankerkoenig';
+import { getStations, type Station, type StationParams } from './tankerkoenig.server';
 
 describe('api list test', () => {
 	const params: StationParams = {

@@ -50,5 +50,6 @@
 		}
 
 		cursor: pointer;
+		// border: 1px solid rgba($color: #FFF, $alpha: .4);
 	}
 </style>

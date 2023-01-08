@@ -7,6 +7,7 @@
 	};
 
 	import { position, isPositionKnown } from '$lib/helpers/position';
+	import { nearbyStations } from '$lib/helpers/stores';
 
 	import mapboxgl from 'mapbox-gl';
 	let map: mapboxgl.Map;
@@ -21,6 +22,7 @@
 			style: 'mapbox://styles/mapbox/streets-v12', // style URL
 			center: [13, 52], // starting position [lng, lat]
 			zoom: 9 // starting zoom
+			// attributionControl: false,
 		});
 		userLocationMarker = new mapboxgl.Marker({
 			color: '#000',
@@ -43,6 +45,19 @@
 		}
 	});
 	$: userLocationMarker && userLocationMarker.setLngLat([$position.lng, $position.lat]);
+
+	$: {
+		if (map && $nearbyStations) {
+			$nearbyStations.forEach((station) => {
+				new mapboxgl.Marker({
+					color: 'green',
+					draggable: false
+				})
+					.setLngLat([station.lng, station.lat])
+					.addTo(map);
+			});
+		}
+	}
 </script>
 
 <svelte:head>

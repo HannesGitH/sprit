@@ -12,13 +12,21 @@ const api_key = env.tankerkoenig_api_key;
 const base_url = 'https://creativecommons.tankerkoenig.de/json/list.php';
 const url = base_url + '?apikey=' + api_key;
 
-export type StationParams = {
+interface StationBaseParams {
 	lat: number;
 	lng: number;
 	rad: number;
+}
+interface StationPriceParams extends StationBaseParams {
 	sort: 'dist' | 'price';
+	type: 'e5' | 'e10' | 'diesel';
+}
+interface StationAllParams extends StationBaseParams {
+	sort: 'dist';
 	type: 'e5' | 'e10' | 'diesel' | 'all';
-};
+}
+export type StationParams = StationPriceParams | StationAllParams;
+
 const getList = async (params: StationParams) => {
 	const response = await fetch(
 		url +
@@ -47,6 +55,8 @@ interface BaseStation {
 	houseNumber: string;
 	isOpen: boolean;
 	postCode: number;
+	lat: number;
+	lng: number;
 }
 interface SinglePriceStation extends BaseStation {
 	price: number;

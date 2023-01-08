@@ -1,11 +1,19 @@
 <script lang="ts">
 	import Map from '$lib/components/map.svelte';
 	import GlassSideButton from '$lib/components/glassSideButton.svelte';
+	import GlassBottomSlide from '$lib/components/glassBottomSlide.svelte';
 
 	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
+	// import { start as getPosition, position } from '$lib/helpers/position';
 	import { isPositionKnown, toggle as togglePosition } from '$lib/helpers/position';
+	import { nearbyStations } from '$lib/helpers/stores';
 
 	export let data: PageData;
+
+	// onMount(() => {
+	// 	getPosition();
+	// });
 
 	let rotation = 0;
 	let setRotation: (value: number) => void;
@@ -37,6 +45,23 @@
 		<span class="material-symbols-outlined" style="--direction: {-rotation}deg;"> north </span>
 	</div>
 </GlassSideButton>
+
+<GlassBottomSlide>
+	<div class="content">
+		<h1>Map</h1>
+		<p>This is a map. It shows you where you are and where you can go. You can also rotate it.</p>
+		{#if $nearbyStations && $nearbyStations.length > 0}
+			<h2>Nearby Stations</h2>
+			<ul>
+				{#each $nearbyStations as station}
+					<li>
+						<a href="/station/{station.id}">{station.name}</a>
+					</li>
+				{/each}
+			</ul>
+		{/if}
+	</div>
+</GlassBottomSlide>
 
 <style lang="scss">
 	#map {
