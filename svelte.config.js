@@ -1,4 +1,8 @@
-import { load } from 'ts-dotenv';
+// sadly ts-config doenst work so the next 4 lines are hotfixing that
+// import { load } from 'ts-dotenv';
+import * as dotenv from 'dotenv';
+dotenv.config();
+const load = (options) => process.env;
 
 const env = load({});
 

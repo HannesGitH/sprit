@@ -45,7 +45,6 @@
 	"dependencies": {
 		"@sveltejs/adapter-node": "^1.0.0",
 		"dotenv": "^16.0.3",
-		"mapbox-gl": "^2.12.0",
-		"ts-dotenv": "^0.9.0"
+		"mapbox-gl": "^2.12.0"
 	}
 }

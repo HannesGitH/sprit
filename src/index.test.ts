@@ -6,19 +6,14 @@ describe('sum test', () => {
 	});
 });
 
-import * as denv from 'ts-dotenv';
+import * as denv from 'dotenv';
 import fs from 'fs';
 describe('.env loading', () => {
 	it('has a .env', () => {
-		expect(fs.existsSync('.env')).toBe(true); //succeeds
-		console.log(fs.readFileSync('.env', 'utf-8')); //api_key=123456
-	});
-	it('loads .env ts', () => {
-		const env = denv.load({ mapbox_api_key: String }); //already fails here if i .load({api_key : String})
-		expect(env.mapbox_api_key).toBeDefined(); //FAILS
+		expect(fs.existsSync('.env')).toBe(true);
 	});
 	it('loads .env', () => {
-		require('dotenv').config();
-		expect(process.env.mapbox_api_key).toBeDefined(); //succeeds
+		denv.config();
+		expect(process.env.mapbox_api_key).toBeDefined();
 	});
 });
