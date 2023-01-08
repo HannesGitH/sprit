@@ -1,12 +1,21 @@
+<img src="/favicon.png" alt="icon" srcset="" id="icon" />
+
 <footer>
 	<p>made by <a href="//hannesgith.github.io">Hannepps</a></p>
 
 	<p>
-		daten zur verfügung gestellt von: <a href="//tankerkoenig.de">tankerkönig.de</a>
+		Daten zur Verfügung gestellt von: <a href="//tankerkoenig.de">tankerkönig.de</a>
 	</p>
 </footer>
 
 <style>
+	#icon {
+		display: block;
+		margin: auto;
+		padding-top: 5rem;
+		width: 100px;
+		height: 100px;
+	}
 	footer {
 		position: fixed;
 		bottom: 0;

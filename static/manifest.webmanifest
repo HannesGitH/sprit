@@ -1,0 +1,36 @@
+{
+	"short_name": "Sprit",
+	"name": "Sprit : wo am günstigsten?",
+	"icons": [
+		{
+			"src": "/favicon_196.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/favicon.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/",
+	"background_color": "white",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "green",
+	"shortcuts": [
+		{
+			"name": "Settings",
+			"short_name": "Settings",
+			"description": "Change settings",
+			"url": "/settings"
+		},
+		{
+			"name": "About",
+			"short_name": "About",
+			"description": "About this app",
+			"url": "/info"
+		}
+	],
+	"description": "Tankstellen Preisvergleich"
+}
