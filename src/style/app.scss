@@ -7,6 +7,7 @@
 	-webkit-backdrop-filter: blur($blur-radius);
 	box-shadow: 0 4px $blur-radius $spread-radius rgba(0, 0, 0, 0.1);
 	// border: 1px solid rgba(255, 255, 255, 0.26);
+	border: 1px solid rgba(255, 255, 255, 0.26);
 }
 
 @mixin button-destyle {
@@ -28,3 +29,20 @@ $colors: (
 	primary: $primary,
 	accent: $accent
 );
+
+@mixin glass-button {
+	@include button-destyle;
+
+	@include glass($elevation: 1.5);
+	transition: all 0.1s ease-in-out;
+	&:hover {
+		@include glass($elevation: 2.2);
+		scale: 1.01;
+	}
+	&:active {
+		@include glass($elevation: 2.8);
+		scale: 1.03;
+	}
+
+	cursor: pointer;
+}

@@ -1,6 +1,5 @@
 <script lang="ts">
 	export let onClick = (): void => {};
-	export let side: 'left' | 'right' = 'left';
 
 	type Unit = '%' | 'px' | 'em' | 'vh' | 'vh' | 'rem' | 'vw' | 'vmin' | 'vmax';
 	type HeightProp = `${number}${Unit}`;
@@ -8,13 +7,7 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div
-	id="glass-side-button"
-	on:click={onClick}
-	role="button"
-	tabindex="0"
-	style="--side: {side}; --top: {top};"
->
+<div id="glass-side-button" on:click={onClick} role="button" tabindex="0" style="--top: {top};">
 	<slot />
 </div>
 
@@ -26,16 +19,5 @@
 		@include glass-button;
 		position: fixed;
 		top: var(--top);
-		@if var(--side) == 'left' {
-			left: 0;
-			border-top-right-radius: 1rem;
-			border-bottom-right-radius: 1rem;
-			border-left: none;
-		} @else {
-			right: 0;
-			border-top-left-radius: 1rem;
-			border-bottom-left-radius: 1rem;
-			border-right: none;
-		}
 	}
 </style>
