@@ -7,7 +7,7 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div id="glass-side-button" on:click={onClick} role="button" tabindex="0" style="--top: {top};">
+<div id="glass-refresh-button" on:click={onClick} role="button" tabindex="0" style="--top: {top};">
 	<slot />
 </div>
 
@@ -15,9 +15,12 @@
 	@use 'sass:color';
 
 	$transition-duration: 400ms;
-	#glass-side-button {
+	#glass-refresh-button {
 		@include glass-button;
 		position: fixed;
 		top: var(--top);
+		left: 50%;
+		transform: translateX(-50%);
+		border-radius: 1rem;
 	}
 </style>

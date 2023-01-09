@@ -5,9 +5,13 @@
 
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
-	// import { start as getPosition, position } from '$lib/helpers/position';
-	import { isPositionKnown, toggle as togglePosition } from '$lib/helpers/position';
+	import {
+		isPositionKnown,
+		toggle as togglePosition,
+		start as getPosition
+	} from '$lib/helpers/position';
 	import { nearbyStations } from '$lib/helpers/stores';
+	import GlassRefreshButton from '$lib/components/glassRefreshButton.svelte';
 
 	export let data: PageData;
 
@@ -22,6 +26,18 @@
 <div id="map">
 	<Map api_key={data.mapbox_api_key} bind:rotation bind:setRotation />
 </div>
+
+<GlassRefreshButton
+	onClick={() => {
+		// getPosition();
+		// TODO: reload stations at current map box
+	}}
+>
+	<div id="refresh">
+		<span class="material-symbols-outlined" class:active={$isPositionKnown}> refresh </span>
+		<p>hier laden</p>
+	</div>
+</GlassRefreshButton>
 
 <GlassSideButton
 	side="right"
@@ -48,10 +64,9 @@
 
 <GlassBottomSlide>
 	<div class="content">
-		<h1>Map</h1>
-		<p>This is a map. It shows you where you are and where you can go. You can also rotate it.</p>
+		<h1>Sprit</h1>
 		{#if $nearbyStations && $nearbyStations.length > 0}
-			<h2>Nearby Stations</h2>
+			<h2>Tankstellen in der Nähe</h2>
 			<ul>
 				{#each $nearbyStations as station}
 					<li>
@@ -59,17 +74,28 @@
 					</li>
 				{/each}
 			</ul>
+		{:else}
+			<p>
+				Verschiebe den Kartenauschnitt und drücke oben auf <i>hier suchen</i> oder
+				<button id="activate-location-text-button" on:click={(e) => getPosition()}
+					>aktiviere den Standort</button
+				>.
+			</p>
 		{/if}
 	</div>
 </GlassBottomSlide>
 
 <style lang="scss">
+	#activate-location-text-button {
+		@include button-destyle;
+	}
 	#map {
 		width: 100vw;
 		height: 100vh;
 	}
 	#location-activate-button,
-	#compass {
+	#compass,
+	#refresh {
 		width: 3rem;
 		height: 3rem;
 		position: relative;
@@ -88,11 +114,38 @@
 		}
 		color: $primary-darker;
 	}
+	#refresh {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-evenly;
+		align-items: center;
+		padding: 0 1rem;
+		width: fit-content;
+		> * {
+			position: relative;
+			top: 0;
+			left: 0;
+			transform: none;
+		}
+		> span {
+			font-size: 2rem;
+			margin-right: 0.5rem;
+		}
+		> p {
+			margin: 0;
+			font-size: 1rem;
+			line-height: 1.5rem;
+		}
+	}
 	.material-symbols-outlined {
 		font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 48;
 		&.active {
 			font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 48;
 			color: $primary-darker;
 		}
+	}
+	#content {
+		max-height: 70vh;
+		overflow: scroll;
 	}
 </style>
