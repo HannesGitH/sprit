@@ -5,8 +5,14 @@
 	export const setRotation = (value: number) => {
 		map && map.rotateTo(value);
 	};
+	export let center: PositionWithRadius = { lng: 13, lat: 52, rad: 12 };
 
-	import { position, isPositionKnown } from '$lib/helpers/position';
+	import {
+		position,
+		isPositionKnown,
+		distance,
+		type PositionWithRadius
+	} from '$lib/helpers/position';
 	import { nearbyStations } from '$lib/helpers/stores';
 
 	import mapboxgl from 'mapbox-gl';
@@ -35,6 +41,13 @@
 		map.on('rotate', () => {
 			rotation = map.getBearing();
 		});
+		map.on('dragend', () => {
+			center = {
+				lng: map.getCenter().lng,
+				lat: map.getCenter().lat,
+				rad: distance(map.getBounds().getNorthEast(), map.getBounds().getSouthWest()) / 2
+			};
+		});
 	});
 
 	isPositionKnown.subscribe((value) => {
@@ -46,15 +59,20 @@
 	});
 	$: userLocationMarker && userLocationMarker.setLngLat([$position.lng, $position.lat]);
 
+	let stationMarkers: mapboxgl.Marker[] = [];
+
 	$: {
 		if (map && $nearbyStations) {
+			stationMarkers.forEach((marker) => marker.remove());
 			$nearbyStations.forEach((station) => {
-				new mapboxgl.Marker({
-					color: 'green',
-					draggable: false
-				})
-					.setLngLat([station.lng, station.lat])
-					.addTo(map);
+				stationMarkers.push(
+					new mapboxgl.Marker({
+						color: 'green',
+						draggable: false
+					})
+						.setLngLat([station.lng, station.lat])
+						.addTo(map)
+				);
 			});
 		}
 	}
@@ -66,7 +84,12 @@
 
 <div id="map" />
 
-<div id="positionmarker" bind:this={positionMarker} hidden={!$isPositionKnown}>
+<div
+	id="positionmarker"
+	bind:this={positionMarker}
+	class:stale={!$isPositionKnown}
+	hidden={!$isPositionKnown}
+>
 	<div class="mapboxgl-user-location-dot" />
 </div>
 
@@ -130,11 +153,11 @@
 			}
 		}
 
-		.mapboxgl-user-location-dot-stale {
+		&.stale {
 			background-color: #aaa;
 		}
 
-		.mapboxgl-user-location-dot-stale::after {
+		&.stale::after {
 			display: none;
 		}
 	}

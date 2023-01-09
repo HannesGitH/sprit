@@ -8,9 +8,10 @@
 	import {
 		isPositionKnown,
 		toggle as togglePosition,
-		start as getPosition
+		start as getPosition,
+		type PositionWithRadius
 	} from '$lib/helpers/position';
-	import { nearbyStations } from '$lib/helpers/stores';
+	import { nearbyStations, updateNearbyStations } from '$lib/helpers/stores';
 	import GlassRefreshButton from '$lib/components/glassRefreshButton.svelte';
 
 	export let data: PageData;
@@ -19,18 +20,23 @@
 	// 	getPosition();
 	// });
 
+	let center: PositionWithRadius = {
+		lng: 13,
+		lat: 52,
+		rad: 12
+	};
+
 	let rotation = 0;
 	let setRotation: (value: number) => void;
 </script>
 
 <div id="map">
-	<Map api_key={data.mapbox_api_key} bind:rotation bind:setRotation />
+	<Map api_key={data.mapbox_api_key} bind:rotation bind:setRotation bind:center />
 </div>
 
 <GlassRefreshButton
 	onClick={() => {
-		// getPosition();
-		// TODO: reload stations at current map box
+		updateNearbyStations(center);
 	}}
 >
 	<div id="refresh">
@@ -144,8 +150,8 @@
 			color: $primary-darker;
 		}
 	}
-	#content {
+	.content {
 		max-height: 70vh;
-		overflow: scroll;
+		overflow-y: scroll;
 	}
 </style>

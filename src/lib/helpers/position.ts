@@ -1,10 +1,15 @@
 import { derived, writable } from 'svelte/store';
 
-export type Position = {
+export interface PositionLike {
 	lat: number;
 	lng: number;
+}
+export interface Position extends PositionLike {
 	lastUpdatedTimeStamp: number;
-};
+}
+export interface PositionWithRadius extends PositionLike {
+	rad: number;
+}
 
 const unknownPosition: Position = { lat: 0, lng: 0, lastUpdatedTimeStamp: -1 };
 export const position = writable(unknownPosition);
@@ -45,7 +50,7 @@ export const toggle = () => {
 	else start(true);
 };
 
-export const distance = (p1: Position, p2: Position) => {
+export const distance = (p1: PositionLike, p2: PositionLike) => {
 	const R = 6371e3; // metres
 	const φ1 = (p1.lat * Math.PI) / 180; // φ, λ in radians
 	const φ2 = (p2.lat * Math.PI) / 180;
