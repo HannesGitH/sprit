@@ -10,6 +10,7 @@ let lastPos = { lat: 0, lng: 0, lastUpdatedTimeStamp: -1 };
 position.subscribe(async (pos) => {
 	if (distance(pos, lastPos) > 1000) {
 		updateNearbyStations({ ...pos, rad: 4 });
+		lastPos = pos;
 	}
 });
 

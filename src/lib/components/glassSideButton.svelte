@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let onClick = (): void => {};
+	export let onClick: () => void;
 	export let side: 'left' | 'right' = 'left';
 
 	type Unit = '%' | 'px' | 'em' | 'vh' | 'vh' | 'rem' | 'vw' | 'vmin' | 'vmax';
