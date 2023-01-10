@@ -124,7 +124,7 @@
 		uniquestring
 	</div>
 {/each} -->
-{@debug $isPositionKnown}
+
 <div
 	id="positionmarker"
 	bind:this={positionMarker}
@@ -204,8 +204,11 @@
 	}
 
 	:global(.mapboxgl-station-location) {
+		$blur-radius: 8px;
 		position: relative;
-		background: #ffffff;
+		background: rgba(255, 255, 255, 0.73);
+		backdrop-filter: blur($blur-radius);
+		-webkit-backdrop-filter: blur($blur-radius);
 		border: 1px solid #afdbca;
 
 		&:after,
@@ -240,7 +243,7 @@
 			position: absolute;
 			width: 80%;
 			height: 0.5rem;
-			background: darkgreen;
+			background: #252d2ac2;
 			left: 10%;
 			bottom: -20px;
 			border-radius: 100%;
@@ -251,17 +254,19 @@
 			:global(> p) {
 				margin: 0;
 				padding: 0;
+				color: rgb(42, 42, 42);
+				font-weight: 300;
 				// font-size: xx-large;
-				&.name {
+				&:not(:not(.name)) {
 					//doenst work?
-					font-weight: bold;
+					font-size: xx-small;
+					font-weight: lighter;
 				}
-				&.price {
+				&:not(:not(.price)) {
 					color: color.scale($primary, $lightness: 50%);
 				}
 				&:not(.price):not(.name) {
 					padding: 0;
-					color: color.scale($primary, $lightness: -50%);
 					&::after {
 						content: ' €';
 					}
