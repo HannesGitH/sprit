@@ -18,6 +18,7 @@ export const updateNearbyStations = async (pos: PositionWithRadius | StationPara
 	const stations: [Station] = await (
 		await fetch('/api/tanker?lat=' + pos.lat + '&lng=' + pos.lng + '&type=all' + '&rad=' + pos.rad)
 	).json();
-	nearbyStations.set(stations);
-	console.log('nearby stations updated', stations);
+	if (Array.isArray(stations)) {
+		nearbyStations.set(stations);
+	}
 };

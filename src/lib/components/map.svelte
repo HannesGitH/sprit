@@ -59,57 +59,42 @@
 	});
 	$: userLocationMarker && userLocationMarker.setLngLat([$position.lng, $position.lat]);
 
-	let stationMarkers: { marker: mapboxgl.Marker; elem?: HTMLElement }[] | false = false;
+	let stationMarkers: mapboxgl.Marker[] = [];
+	let stationMarkerElems: HTMLElement[] = [];
+
 	let chosenFuel: 'all' | 'diesel' | 'e5' | 'e10' = 'all';
 
 	import type { MultiplePriceStation, SinglePriceStation } from '$lib/helpers/tankerkoenig.server';
-	$: {
-		if (map && $nearbyStations) {
-			Array.isArray(stationMarkers) &&
-				stationMarkers.forEach((marker) => {
-					marker.marker.remove();
-				});
-			stationMarkers =
-				Array.isArray($nearbyStations) &&
-				$nearbyStations.map((station) => {
-					let elem = document.createElement('div');
-					let priceHTML = '';
-					if ((station as any).price) {
-						const s = station as SinglePriceStation;
-						priceHTML = `<p class="price">${s.price}</p>`;
-					} else {
-						const s = station as MultiplePriceStation;
-						if (chosenFuel != 'all') priceHTML = `<p class="price">${s[chosenFuel]}</p>`;
-						else
-							priceHTML = `
-						<p>${s.diesel}</p>
-						<p>${s.e5}</p>
-						<p>${s.e10}</p>
-					`;
-					}
-					elem.innerHTML = `
-					<div class="mapboxgl-station-location">
-						<div class="mapboxgl-station-location-inner">
-							<p class="name">${station.brand}</p>
-							${priceHTML}
-						</div>
-    					<div id="shadow"></div>
-					</div>
-				`;
-					return {
-						marker: new mapboxgl.Marker({
-							color: 'green',
-							draggable: false,
-							element: elem,
-							anchor: 'bottom'
-						})
-							.setLngLat([station.lng, station.lat])
-							.addTo(map),
-						elem
-					};
-				});
+	import Price from './marker/price.svelte';
+
+	nearbyStations.subscribe(async ($nearbyStations) => {
+		if (map && $nearbyStations && Array.isArray($nearbyStations)) {
+			console.log('rebuilt');
+
+			stationMarkers.forEach((marker) => {
+				marker.remove();
+			});
+
+			stationMarkerElems = $nearbyStations.map((station) => document.createElement('div'));
+
+			//TODO: wait until divs are rendered
+			//wait a few ms
+			await new Promise((resolve) => setTimeout(resolve, 200));
+
+			stationMarkers = $nearbyStations.map((station, i) => {
+				return new mapboxgl.Marker({
+					color: 'green',
+					draggable: false,
+					element: stationMarkerElems[i],
+					anchor: 'bottom'
+				})
+					.setLngLat([station.lng, station.lat])
+					.addTo(map);
+			});
 		}
-	}
+	});
+
+	const getStation: any = (idx: number) => $nearbyStations[idx]; //sadly we need to erase the type for the stuff outside script to work, see https://github.com/sveltejs/svelte/issues/4701
 </script>
 
 <svelte:head>
@@ -119,11 +104,27 @@
 <div id="map" />
 
 <!-- sadly we can't use bind:this on dynamic lists -->
-<!-- {#each stationMarkers as marker}
-	<div bind:this={marker.elem}>
-		uniquestring
+{#each stationMarkerElems as marker, index}
+	{@const station = getStation(index)}
+	<div bind:this={marker}>
+		<div class="mapboxgl-station-location">
+			<div class="mapboxgl-station-location-inner">
+				<p class="name">{station.brand}</p>
+				{#if station.price}
+					<p class="price">{station.price}€</p>
+					<Price name={chosenFuel} price={station.price} />
+				{:else if chosenFuel === 'all'}
+					<Price name="Diesel" price={station.diesel} />
+					<Price name="e5" price={station.e5} />
+					<Price name="e10" price={station.e10} />
+				{:else}
+					<Price name={chosenFuel} price={station[chosenFuel]} />
+				{/if}
+			</div>
+			<div id="shadow" />
+		</div>
 	</div>
-{/each} -->
+{/each}
 
 <div
 	id="positionmarker"
@@ -203,12 +204,10 @@
 		}
 	}
 
-	:global(.mapboxgl-station-location) {
+	.mapboxgl-station-location {
 		$blur-radius: 8px;
 		position: relative;
-		background: rgba(255, 255, 255, 0.73);
-		backdrop-filter: blur($blur-radius);
-		-webkit-backdrop-filter: blur($blur-radius);
+		background: rgba(255, 255, 255, 1);
 		border: 1px solid #afdbca;
 
 		&:after,
@@ -238,7 +237,7 @@
 		padding: 0.1rem 0.5rem;
 		border-radius: 0.5rem;
 		box-shadow: 0 4px 0.5rem rgba(0, 0, 0, 0.25);
-		:global(#shadow) {
+		#shadow {
 			z-index: -2;
 			position: absolute;
 			width: 80%;
@@ -250,26 +249,20 @@
 			//blur
 			filter: blur(0.3rem);
 		}
-		:global(.mapboxgl-station-location-inner) {
-			:global(> p) {
+		.mapboxgl-station-location-inner {
+			width: 2rem;
+			> p {
 				margin: 0;
 				padding: 0;
 				color: rgb(42, 42, 42);
 				font-weight: 300;
 				// font-size: xx-large;
-				&:not(:not(.name)) {
-					//doenst work?
+				&.name {
 					font-size: xx-small;
 					font-weight: lighter;
-				}
-				&:not(:not(.price)) {
-					color: color.scale($primary, $lightness: 50%);
-				}
-				&:not(.price):not(.name) {
-					padding: 0;
-					&::after {
-						content: ' €';
-					}
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
 				}
 			}
 		}
