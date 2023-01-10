@@ -59,32 +59,35 @@
 	});
 	$: userLocationMarker && userLocationMarker.setLngLat([$position.lng, $position.lat]);
 
-	let stationMarkers: { marker: mapboxgl.Marker; elem?: HTMLElement }[] = [];
+	let stationMarkers: { marker: mapboxgl.Marker; elem?: HTMLElement }[] | false = false;
 	let chosenFuel: 'all' | 'diesel' | 'e5' | 'e10' = 'all';
 
 	import type { MultiplePriceStation, SinglePriceStation } from '$lib/helpers/tankerkoenig.server';
 	$: {
 		if (map && $nearbyStations) {
-			stationMarkers.forEach((marker) => {
-				marker.marker.remove();
-			});
-			stationMarkers = $nearbyStations.map((station) => {
-				let elem = document.createElement('div');
-				let priceHTML = '';
-				if ((station as any).price) {
-					const s = station as SinglePriceStation;
-					priceHTML = `<p class="price">${s.price}</p>`;
-				} else {
-					const s = station as MultiplePriceStation;
-					if (chosenFuel != 'all') priceHTML = `<p class="price">${s[chosenFuel]}</p>`;
-					else
-						priceHTML = `
+			Array.isArray(stationMarkers) &&
+				stationMarkers.forEach((marker) => {
+					marker.marker.remove();
+				});
+			stationMarkers =
+				Array.isArray($nearbyStations) &&
+				$nearbyStations.map((station) => {
+					let elem = document.createElement('div');
+					let priceHTML = '';
+					if ((station as any).price) {
+						const s = station as SinglePriceStation;
+						priceHTML = `<p class="price">${s.price}</p>`;
+					} else {
+						const s = station as MultiplePriceStation;
+						if (chosenFuel != 'all') priceHTML = `<p class="price">${s[chosenFuel]}</p>`;
+						else
+							priceHTML = `
 						<p>${s.diesel}</p>
 						<p>${s.e5}</p>
 						<p>${s.e10}</p>
 					`;
-				}
-				elem.innerHTML = `
+					}
+					elem.innerHTML = `
 					<div class="mapboxgl-station-location">
 						<div class="mapboxgl-station-location-inner">
 							<p class="name">${station.brand}</p>
@@ -93,18 +96,18 @@
     					<div id="shadow"></div>
 					</div>
 				`;
-				return {
-					marker: new mapboxgl.Marker({
-						color: 'green',
-						draggable: false,
-						element: elem,
-						anchor: 'bottom'
-					})
-						.setLngLat([station.lng, station.lat])
-						.addTo(map),
-					elem
-				};
-			});
+					return {
+						marker: new mapboxgl.Marker({
+							color: 'green',
+							draggable: false,
+							element: elem,
+							anchor: 'bottom'
+						})
+							.setLngLat([station.lng, station.lat])
+							.addTo(map),
+						elem
+					};
+				});
 		}
 	}
 </script>
@@ -121,7 +124,7 @@
 		uniquestring
 	</div>
 {/each} -->
-
+{@debug $isPositionKnown}
 <div
 	id="positionmarker"
 	bind:this={positionMarker}
@@ -203,7 +206,7 @@
 	:global(.mapboxgl-station-location) {
 		position: relative;
 		background: #ffffff;
-		border: 2px solid #afdbca;
+		border: 1px solid #afdbca;
 
 		&:after,
 		&:before {
@@ -226,8 +229,8 @@
 		&:before {
 			border-color: rgba(175, 219, 202, 0);
 			border-top-color: #afdbca;
-			border-width: 13px;
-			margin-left: -13px;
+			border-width: 12px;
+			margin-left: -12px;
 		}
 		padding: 0.1rem 0.5rem;
 		border-radius: 0.5rem;

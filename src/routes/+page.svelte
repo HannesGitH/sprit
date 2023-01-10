@@ -36,7 +36,7 @@
 
 <GlassRefreshButton
 	onClick={() => {
-		updateNearbyStations(center);
+		if ($isPositionKnown) updateNearbyStations(center);
 	}}
 >
 	<div id="refresh">
