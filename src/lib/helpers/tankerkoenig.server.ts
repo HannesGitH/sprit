@@ -68,12 +68,35 @@ export interface MultiplePriceStation extends BaseStation {
 }
 export type Station = SinglePriceStation | MultiplePriceStation;
 
+export type DetailedStation = Station & {
+	state?: string;
+	wholeDay: boolean;
+	overrides: string[];
+	openingTimes: {
+		text: string;
+		start: string;
+		end: string;
+	}[];
+};
+
 export const getStations = async (params: StationParams): Promise<[Station]> => {
 	const response = await getList(params);
 	if (!response.ok) {
 		throw new Error(response.message);
 	}
 	return response.stations;
+};
+
+export const getStation = async (id: string): Promise<DetailedStation> => {
+	//TODO: check whether this is the correct endpoint address and url pattern
+	const base_url = 'https://creativecommons.tankerkoenig.de/json/detail.php';
+	const url = base_url + '?apikey=' + api_key;
+	const response = await fetch(url + '&id=' + id);
+	const res = await response.json();
+	if (!res.ok) {
+		throw new Error(res.message);
+	}
+	return res.station;
 };
 
 export {};
