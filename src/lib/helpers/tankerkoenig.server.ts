@@ -58,10 +58,10 @@ interface BaseStation {
 	lat: number;
 	lng: number;
 }
-interface SinglePriceStation extends BaseStation {
+export interface SinglePriceStation extends BaseStation {
 	price: number;
 }
-interface MultiplePriceStation extends BaseStation {
+export interface MultiplePriceStation extends BaseStation {
 	e5: number;
 	e10: number;
 	diesel: number;

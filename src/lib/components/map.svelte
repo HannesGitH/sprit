@@ -59,20 +59,51 @@
 	});
 	$: userLocationMarker && userLocationMarker.setLngLat([$position.lng, $position.lat]);
 
-	let stationMarkers: mapboxgl.Marker[] = [];
+	let stationMarkers: { marker: mapboxgl.Marker; elem?: HTMLElement }[] = [];
+	let chosenFuel: 'all' | 'diesel' | 'e5' | 'e10' = 'all';
 
+	import type { MultiplePriceStation, SinglePriceStation } from '$lib/helpers/tankerkoenig.server';
 	$: {
 		if (map && $nearbyStations) {
-			stationMarkers.forEach((marker) => marker.remove());
-			$nearbyStations.forEach((station) => {
-				stationMarkers.push(
-					new mapboxgl.Marker({
+			stationMarkers.forEach((marker) => {
+				marker.marker.remove();
+			});
+			stationMarkers = $nearbyStations.map((station) => {
+				let elem = document.createElement('div');
+				let priceHTML = '';
+				if ((station as any).price) {
+					const s = station as SinglePriceStation;
+					priceHTML = `<p class="price">${s.price}</p>`;
+				} else {
+					const s = station as MultiplePriceStation;
+					if (chosenFuel != 'all') priceHTML = `<p class="price">${s[chosenFuel]}</p>`;
+					else
+						priceHTML = `
+						<p>${s.diesel}</p>
+						<p>${s.e5}</p>
+						<p>${s.e10}</p>
+					`;
+				}
+				elem.innerHTML = `
+					<div class="mapboxgl-station-location">
+						<div class="mapboxgl-station-location-inner">
+							<p class="name">${station.brand}</p>
+							${priceHTML}
+						</div>
+    					<div id="shadow"></div>
+					</div>
+				`;
+				return {
+					marker: new mapboxgl.Marker({
 						color: 'green',
-						draggable: false
+						draggable: false,
+						element: elem,
+						anchor: 'bottom'
 					})
 						.setLngLat([station.lng, station.lat])
-						.addTo(map)
-				);
+						.addTo(map),
+					elem
+				};
 			});
 		}
 	}
@@ -83,6 +114,13 @@
 </svelte:head>
 
 <div id="map" />
+
+<!-- sadly we can't use bind:this on dynamic lists -->
+<!-- {#each stationMarkers as marker}
+	<div bind:this={marker.elem}>
+		uniquestring
+	</div>
+{/each} -->
 
 <div
 	id="positionmarker"
@@ -159,6 +197,73 @@
 
 		&.stale::after {
 			display: none;
+		}
+	}
+
+	:global(.mapboxgl-station-location) {
+		position: relative;
+		background: #ffffff;
+		border: 2px solid #afdbca;
+
+		&:after,
+		&:before {
+			top: 100%;
+			left: 50%;
+			border: solid transparent;
+			content: '';
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+		}
+
+		&:after {
+			border-color: rgba(255, 255, 255, 0);
+			border-top-color: #ffffff;
+			border-width: 10px;
+			margin-left: -10px;
+		}
+		&:before {
+			border-color: rgba(175, 219, 202, 0);
+			border-top-color: #afdbca;
+			border-width: 13px;
+			margin-left: -13px;
+		}
+		padding: 0.1rem 0.5rem;
+		border-radius: 0.5rem;
+		box-shadow: 0 4px 0.5rem rgba(0, 0, 0, 0.25);
+		:global(#shadow) {
+			z-index: -2;
+			position: absolute;
+			width: 80%;
+			height: 0.5rem;
+			background: darkgreen;
+			left: 10%;
+			bottom: -20px;
+			border-radius: 100%;
+			//blur
+			filter: blur(0.3rem);
+		}
+		:global(.mapboxgl-station-location-inner) {
+			:global(> p) {
+				margin: 0;
+				padding: 0;
+				// font-size: xx-large;
+				&.name {
+					//doenst work?
+					font-weight: bold;
+				}
+				&.price {
+					color: color.scale($primary, $lightness: 50%);
+				}
+				&:not(.price):not(.name) {
+					padding: 0;
+					color: color.scale($primary, $lightness: -50%);
+					&::after {
+						content: ' €';
+					}
+				}
+			}
 		}
 	}
 </style>

@@ -41,7 +41,7 @@
 >
 	<div id="refresh">
 		<span class="material-symbols-outlined" class:active={$isPositionKnown}> refresh </span>
-		<p>hier laden</p>
+		<p>hier suchen</p>
 	</div>
 </GlassRefreshButton>
 
@@ -70,7 +70,6 @@
 
 <GlassBottomSlide>
 	<div class="content">
-		<h1>Sprit</h1>
 		{#if $nearbyStations && $nearbyStations.length > 0}
 			<h2>Tankstellen in der Nähe</h2>
 			<ul>
@@ -81,6 +80,7 @@
 				{/each}
 			</ul>
 		{:else}
+			<h1>Sprit</h1>
 			<p>
 				Verschiebe den Kartenauschnitt und drücke oben auf <i>hier suchen</i> oder
 				<button id="activate-location-text-button" on:click={(e) => getPosition()}
