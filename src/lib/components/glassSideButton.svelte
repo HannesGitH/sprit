@@ -30,12 +30,22 @@
 			left: 0;
 			border-top-right-radius: 1rem;
 			border-bottom-right-radius: 1rem;
-			border-left: none;
+			&,
+			&:focus,
+			&:active,
+			&:hover {
+				border-left: none;
+			}
 		} @else {
 			right: 0;
 			border-top-left-radius: 1rem;
 			border-bottom-left-radius: 1rem;
-			border-right: none;
+			&,
+			&:focus,
+			&:active,
+			&:hover {
+				border-right: none;
+			}
 		}
 	}
 </style>

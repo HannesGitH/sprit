@@ -28,5 +28,7 @@
 		padding: 0;
 		margin: 0;
 		font-family: 'Archivo', 'Ostrich Sans', sans-serif;
+		background-color: #000000;
+		color: #ffffff;
 	}
 </style>

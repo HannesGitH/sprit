@@ -14,6 +14,11 @@
 		padding: 2rem;
 		border-top-left-radius: 3rem;
 		border-top-right-radius: 3rem;
-		border-bottom: none;
+		&,
+		&:focus,
+		&:active,
+		&:hover {
+			border-bottom: none;
+		}
 	}
 </style>

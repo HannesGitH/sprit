@@ -36,11 +36,11 @@
 
 <GlassRefreshButton
 	onClick={() => {
-		if ($isPositionKnown) updateNearbyStations(center);
+		updateNearbyStations(center);
 	}}
 >
 	<div id="refresh">
-		<span class="material-symbols-outlined" class:active={$isPositionKnown}> refresh </span>
+		<span class="material-symbols-outlined" class:active={!$isPositionKnown}> refresh </span>
 		<p>hier suchen</p>
 	</div>
 </GlassRefreshButton>
@@ -105,7 +105,7 @@
 		width: 3rem;
 		height: 3rem;
 		position: relative;
-		color: gray;
+		color: white;
 		> * {
 			position: absolute;
 			top: 50%;
@@ -118,7 +118,7 @@
 			// rotate: var(--direction);
 			transform: translate(-50%, -50%) rotate(var(--direction));
 		}
-		color: $primary-darker;
+		color: $primary;
 	}
 	#refresh {
 		display: flex;
@@ -147,7 +147,7 @@
 		font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 48;
 		&.active {
 			font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 48;
-			color: $primary-darker;
+			color: $primary;
 		}
 	}
 	.content {

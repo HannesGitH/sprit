@@ -19,7 +19,7 @@
 	let map: mapboxgl.Map;
 	let userLocationMarker: mapboxgl.Marker;
 	let positionMarker: HTMLElement;
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	onMount(() => {
 		mapboxgl.accessToken = api_key;
 		map = new mapboxgl.Map({
@@ -59,6 +59,7 @@
 	});
 	$: userLocationMarker && userLocationMarker.setLngLat([$position.lng, $position.lat]);
 
+	let stationMarkersDirty = false;
 	let stationMarkers: mapboxgl.Marker[] = [];
 	let stationMarkerElems: HTMLElement[] = [];
 
@@ -76,22 +77,23 @@
 			});
 
 			stationMarkerElems = $nearbyStations.map((station) => document.createElement('div'));
-
-			//TODO: wait until divs are rendered
-			//wait a few ms
-			await new Promise((resolve) => setTimeout(resolve, 200));
-
-			stationMarkers = $nearbyStations.map((station, i) => {
-				return new mapboxgl.Marker({
-					color: 'green',
-					draggable: false,
-					element: stationMarkerElems[i],
-					anchor: 'bottom'
-				})
-					.setLngLat([station.lng, station.lat])
-					.addTo(map);
-			});
+			stationMarkersDirty = true;
 		}
+	});
+
+	afterUpdate(() => {
+		if (!stationMarkersDirty) return;
+		stationMarkersDirty = false;
+		stationMarkers = $nearbyStations.map((station, i) => {
+			return new mapboxgl.Marker({
+				color: 'green',
+				draggable: false,
+				element: stationMarkerElems[i],
+				anchor: 'bottom'
+			})
+				.setLngLat([station.lng, station.lat])
+				.addTo(map);
+		});
 	});
 
 	const getStation: any = (idx: number) => $nearbyStations[idx]; //sadly we need to erase the type for the stuff outside script to work, see https://github.com/sveltejs/svelte/issues/4701
@@ -142,7 +144,7 @@
 		width: 100%;
 		height: 100%;
 	}
-	$user-location-color: $primary-darker;
+	$user-location-color: $primary;
 
 	#positionmarker {
 		position: absolute;

@@ -62,8 +62,14 @@
 		border-bottom-right-radius: 1rem;
 		border-left: none;
 
+		&:focus,
+		&:active,
+		&:hover {
+			border-left: none;
+		}
+
 		svg {
-			color: $primary-darker;
+			color: $primary;
 			transition: transform $transition-duration;
 		}
 		.top {
@@ -94,14 +100,14 @@
 				transition: all 0.1s ease-in-out;
 				margin: 0.5rem 2rem 0 0;
 				padding: 1rem;
-				background-color: $primary-darker;
+				background-color: $primary;
 				top: 1rem;
 				left: 0;
 				border-top-right-radius: 1rem;
 				border-bottom-right-radius: 1rem;
 				display: block;
 				display: block;
-				color: white;
+				color: black;
 				text-decoration: none;
 				font-weight: bold;
 				&:hover {
