@@ -2,6 +2,7 @@
 	<slot />
 </div>
 
+<!-- TODO: make vertically resizable with a custom dragbar on top, also automatically hide popup on scroll -->
 <style lang="scss">
 	#wrapper {
 		@include glass($elevation: 1.5);
@@ -13,8 +14,10 @@
 		transform: translateX(-50%);
 		overflow: hidden;
 		// padding: 2rem;
-		border-top-left-radius: 3rem;
-		border-top-right-radius: 3rem;
+		@media not screen and not (orientation: portrait) {
+			border-top-left-radius: 3rem;
+			border-top-right-radius: 3rem;
+		}
 		&,
 		&:focus,
 		&:active,
