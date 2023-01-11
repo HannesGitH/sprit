@@ -1,13 +1,21 @@
 <script lang="ts">
+	export let onClick: () => void | Promise<void>;
 </script>
 
-<div class="card">
+<button class="card" on:click={onClick}>
 	<slot />
-</div>
+</button>
 
-<style>
+<style lang="scss">
 	.card {
-		background-color: black;
-		border-radius: 3rem;
+		@include button-destyle;
+		@include glass-button;
+		// background-color: black;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		border-radius: 1.5rem;
+		padding: 1rem;
+		// box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+		// border: 1px solid $primary;
 	}
 </style>

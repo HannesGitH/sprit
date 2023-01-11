@@ -44,16 +44,18 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		align-items: center;
+		align-items: top;
 	}
 
 	#name-wrapper {
 		display: flex;
 		flex-direction: column;
+		align-items: baseline;
 	}
 
 	#name {
 		margin: 0;
+		text-align: left;
 	}
 
 	#brand {
@@ -67,7 +69,13 @@
 	}
 
 	#distance p {
+		padding-left: 1rem;
 		margin: 0;
+	}
+	#distance p::after {
+		font-size: 0.5rem;
+		font-weight: 300;
+		content: ' km';
 	}
 
 	.prices {

@@ -11,7 +11,8 @@
 		left: 50%;
 		min-width: 90%;
 		transform: translateX(-50%);
-		padding: 2rem;
+		overflow: hidden;
+		// padding: 2rem;
 		border-top-left-radius: 3rem;
 		border-top-right-radius: 3rem;
 		&,
