@@ -78,6 +78,7 @@
 			<div id="stations">
 				{#each $nearbyStations as station}
 					<div class="station">
+						<!-- TODO: highlight on map (on hover) and vice versa (simply add a 'selected' var and set and compare) -->
 						<Card onClick={() => goto(`/station/${station.id}`)}>
 							<Station {station} />
 						</Card>
