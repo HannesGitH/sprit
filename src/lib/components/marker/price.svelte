@@ -3,9 +3,9 @@
 	export let price: number | string;
 
 	$: priceNum = Number(price);
-	$: euros = priceNum.toFixed(0);
-	$: cents = (priceNum % 1).toFixed(2).slice(2);
-	$: tenths = (priceNum % 1).toFixed(3).slice(2, 3);
+	$: euros = Math.floor(priceNum);
+	$: cents = Math.floor((priceNum % 1) * 100);
+	$: tenths = Math.floor((priceNum % 1) * 1000) % 10;
 </script>
 
 <div class="wrapper">
