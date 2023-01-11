@@ -23,7 +23,7 @@
 	onMount(() => {
 		mapboxgl.accessToken = api_key;
 		map = new mapboxgl.Map({
-			container: 'map', // container ID
+			container: 'map-mapboxgl-canvas-koshjdf', // container ID
 			// projection: {name:'globe'},
 			style: 'mapbox://styles/mapbox/navigation-night-v1', // style URL
 			center: [13, 52], // starting position [lng, lat]
@@ -109,7 +109,7 @@
 	<link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 
-<div id="map" />
+<div id="map-mapboxgl-canvas-koshjdf" />
 
 <!-- sadly we can't use bind:this on dynamic lists -->
 {#each stationMarkerElems as marker, index}
@@ -146,7 +146,7 @@
 <style lang="scss">
 	@use 'sass:color';
 
-	#map {
+	#map-mapboxgl-canvas-koshjdf {
 		width: 100%;
 		height: 100%;
 	}
