@@ -1,11 +1,11 @@
 @use 'sass:color';
 @mixin glass($elevation: 1, $color: black) {
 	$blur-radius: 10px * $elevation;
-	$spread-radius: 2px * $elevation;
+	$spread-radius: -2px * $elevation;
 	background: color.scale($color, $alpha: -57%);
 	backdrop-filter: blur($blur-radius);
 	-webkit-backdrop-filter: blur($blur-radius);
-	box-shadow: 0 4px $blur-radius $spread-radius rgba(182, 204, 189, 0.1);
+	box-shadow: 0 4px $blur-radius $spread-radius rgba(182, 204, 189, 0.15);
 	// border: 1px solid rgba(255, 255, 255, 0.26);
 	border: 1px solid rgba(139, 139, 139, 0.26);
 }
@@ -24,7 +24,7 @@ $primary: #39ff6e;
 
 $primary-darker: color.scale($primary, $lightness: -50%);
 
-$accent: #d50000;
+$accent: #00ced5;
 
 $colors: (
 	primary: $primary,

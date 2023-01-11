@@ -25,7 +25,7 @@
 		map = new mapboxgl.Map({
 			container: 'map', // container ID
 			// projection: {name:'globe'},
-			style: 'mapbox://styles/mapbox/streets-v12', // style URL
+			style: 'mapbox://styles/mapbox/navigation-night-v1', // style URL
 			center: [13, 52], // starting position [lng, lat]
 			zoom: 9 // starting zoom
 			// attributionControl: false,
@@ -48,6 +48,12 @@
 				rad: distance(map.getBounds().getNorthEast(), map.getBounds().getSouthWest()) / 2
 			};
 		});
+		// map.touchZoomRotate.enable();
+		// map.boxZoom.enable();
+		// map.dragPan.enable();
+		// map.dragRotate.enable();
+		// map.keyboard.enable();
+		// map.scrollZoom.enable();
 	});
 
 	isPositionKnown.subscribe((value) => {
@@ -144,7 +150,7 @@
 		width: 100%;
 		height: 100%;
 	}
-	$user-location-color: $primary;
+	$user-location-color: $accent;
 
 	#positionmarker {
 		position: absolute;
@@ -207,10 +213,13 @@
 	}
 
 	.mapboxgl-station-location {
+		$bg-color: #132323;
+		$border-color: rgb(96, 166, 165);
+
 		$blur-radius: 8px;
 		position: relative;
-		background: rgba(255, 255, 255, 1);
-		border: 1px solid #afdbca;
+		background: $bg-color;
+		border: 1px solid $border-color;
 
 		&:after,
 		&:before {
@@ -226,13 +235,13 @@
 
 		&:after {
 			border-color: rgba(255, 255, 255, 0);
-			border-top-color: #ffffff;
+			border-top-color: $bg-color;
 			border-width: 10px;
 			margin-left: -10px;
 		}
 		&:before {
 			border-color: rgba(175, 219, 202, 0);
-			border-top-color: #afdbca;
+			border-top-color: $border-color;
 			border-width: 12px;
 			margin-left: -12px;
 		}
@@ -256,7 +265,7 @@
 			> p {
 				margin: 0;
 				padding: 0;
-				color: rgb(42, 42, 42);
+				color: rgb(255, 255, 255);
 				font-weight: 300;
 				// font-size: xx-large;
 				&.name {
