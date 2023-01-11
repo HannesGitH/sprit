@@ -213,8 +213,10 @@
 	}
 
 	.mapboxgl-station-location {
-		$bg-color: #132323;
-		$border-color: rgb(96, 166, 165);
+		@include glass;
+		$bg-color: black;
+		$bg-color: color.scale($bg-color, $alpha: -57%);
+		$border-color: $primary;
 
 		$blur-radius: 8px;
 		position: relative;
