@@ -5,11 +5,12 @@
 		SinglePriceStation,
 		Station
 	} from '$lib/helpers/tankerkoenig.server';
+	import Price from './marker/price.svelte';
 
 	export let station: Station | DetailedStation;
 	$: dist = station.dist; //TODO: better dist in minutes
 
-	$: isDetailed = (station as DetailedStation).wholeDay;
+	$: isDetailed = (station as DetailedStation).wholeDay != null;
 	$: products = (station as SinglePriceStation).price
 		? [{ name: 'price', price: (station as SinglePriceStation).price }]
 		: ((s: MultiplePriceStation) => [
@@ -17,13 +18,15 @@
 				{ name: 'e5', price: s.e5 },
 				{ name: 'e10', price: s.e10 }
 		  ])(station as MultiplePriceStation);
+
+	$: detailedStation = station as DetailedStation;
 	//TODO: add icons
 </script>
 
-<div>
+<div class="card">
 	<div id="top-row">
 		<div id="name-wrapper">
-			<h2 id="name">{station.name}</h2>
+			<h3 id="name">{station.name}</h3>
 			<h6 id="brand">{station.brand}</h6>
 		</div>
 		{#if dist}
@@ -34,12 +37,31 @@
 	</div>
 	<div class="prices">
 		{#each products as product}
-			<p>hi</p>
+			<div class="price">
+				<Price name={product.name} price={product.price} />
+			</div>
 		{/each}
 	</div>
+	<!-- TODO: add details, and start navigation button -->
+	<!-- {#if isDetailed}
+		{@const station = detailedStation}
+		{#if station.wholeDay}
+			<div class="whole-day">
+				<p>24h geöffnet</p>
+			</div>
+		{/if}
+	{/if} -->
 </div>
 
 <style>
+	.card {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		/* justify-self: stretch; */
+		height: 100%;
+		/* align-items: stretch; */
+	}
 	#top-row {
 		display: flex;
 		flex-direction: row;
@@ -63,9 +85,9 @@
 	}
 
 	#distance {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
+		position: absolute;
+		right: 1rem;
+		top: 1rem;
 	}
 
 	#distance p {
@@ -82,5 +104,9 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+	}
+	.price {
+		height: max-content;
+		width: max-content;
 	}
 </style>

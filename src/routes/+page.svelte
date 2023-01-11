@@ -190,7 +190,7 @@
 		padding-bottom: var(--mask-height);
 
 		/* Keep some space between content and scrollbar */
-		padding-right: 20px;
+		// padding-right: 20px;
 
 		/* The CSS mask */
 

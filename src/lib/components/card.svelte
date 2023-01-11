@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let onClick: () => void | Promise<void>;
+	export let onClick: (() => void | Promise<void>) | null = null;
 </script>
 
 <button class="card" on:click={onClick}>

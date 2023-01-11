@@ -21,13 +21,14 @@
 	.wrapper {
 		display: flex;
 		flex-direction: column;
+		align-items: baseline;
 
 		.petrolname {
 			font-size: xx-small;
 			font-weight: 300;
 			margin-bottom: 0;
 			padding: 0;
-			margin: 0 0 -10px 0;
+			// margin: 0 0 -10px 0;
 			color: gray;
 		}
 		.price {

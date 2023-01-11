@@ -9,7 +9,7 @@
 		bottom: 0;
 		//center
 		left: 50%;
-		min-width: 90%;
+		width: 100%;
 		transform: translateX(-50%);
 		overflow: hidden;
 		// padding: 2rem;
