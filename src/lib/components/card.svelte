@@ -15,6 +15,8 @@
 		text-overflow: ellipsis;
 		border-radius: 1.5rem;
 		padding: 1rem;
+		width: 100%;
+		height: 100%;
 		// box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
 		// border: 1px solid $primary;
 	}
