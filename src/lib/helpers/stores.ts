@@ -16,7 +16,16 @@ position.subscribe(async (pos) => {
 
 export const updateNearbyStations = async (pos: PositionWithRadius | StationParams) => {
 	const stations: [Station] = await (
-		await fetch('/api/tanker?lat=' + pos.lat + '&lng=' + pos.lng + '&type=all' + '&rad=' + pos.rad)
+		await fetch(
+			'/api/tanker?lat=' +
+				pos.lat +
+				'&lng=' +
+				pos.lng +
+				'&type=' +
+				((pos as StationParams).type ?? 'all') +
+				'&rad=' +
+				pos.rad
+		)
 	).json();
 	if (Array.isArray(stations)) {
 		nearbyStations.set(stations);

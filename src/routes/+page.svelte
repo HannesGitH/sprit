@@ -16,6 +16,7 @@
 	import GlassRefreshButton from '$lib/components/glassRefreshButton.svelte';
 	import Station from '$lib/components/station.svelte';
 	import Card from '$lib/components/card.svelte';
+	import Taglist from '$lib/components/taglist.svelte';
 
 	export let data: PageData;
 
@@ -38,6 +39,16 @@
 
 	let selectedStationId: string | null = null;
 	let hoveredStationId: string | null = null;
+
+	let possibilities = [
+		{ name: 'diesel', selected: true },
+		{ name: 'e5', selected: false },
+		{ name: 'e10', selected: false }
+	];
+	$: selectedFuels = possibilities.filter((p) => p.selected).map((p) => p.name);
+	$: fuelType = selectedFuels.length > 1 ? 'all' : selectedFuels[0]; //could be improved
+	// $: selectedFuels, updateNearbyStations({...center, type:fuelType as any});
+	//TODO: sort by fueltype price etc
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -88,7 +99,16 @@
 
 <GlassBottomSlide bind:this={footerElem}>
 	{#if $nearbyStations && $nearbyStations.length > 0}
-		<h2 style="padding: 2rem 2rem 0 2rem">Tankstellen in der Nähe</h2>
+		<div id="header">
+			<h2 style="padding: 2rem 2rem 0 2rem">Tankstellen in der Nähe</h2>
+			<div>
+				<Taglist radio bind:possibilities />
+				<p style="font-size: xx-small; position:absolute; top:0; right:2rem;">
+					sorry, noch ohne funktion
+				</p>
+			</div>
+		</div>
+
 		<div id="stations">
 			{#each $nearbyStations as station}
 				<div
@@ -126,6 +146,12 @@
 </GlassBottomSlide>
 
 <style lang="scss">
+	#header {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
 	#activate-location-text-button {
 		@include button-destyle;
 	}

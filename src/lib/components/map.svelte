@@ -79,8 +79,6 @@
 
 	nearbyStations.subscribe(async ($nearbyStations) => {
 		if (map && $nearbyStations && Array.isArray($nearbyStations)) {
-			console.log('rebuilt');
-
 			stationMarkers.forEach((marker) => {
 				marker.remove();
 			});
@@ -294,9 +292,14 @@
 				}
 			}
 		}
+
+		position: absolute;
+		z-index: 0;
 		&.hovered {
 			$border-color: $primary;
 			border: 1px solid $border-color;
+			//FIXME: why doesnt this work
+			z-index: 2;
 			&:before {
 				border-color: rgba(175, 219, 202, 0);
 				border-top-color: $border-color;
