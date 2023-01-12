@@ -7,6 +7,9 @@
 	};
 	export let center: PositionWithRadius = { lng: 13, lat: 52, rad: 12 };
 
+	export let selectedStationId: string | null = null;
+	export let hoveredStationId: string | null = null;
+
 	import {
 		position,
 		isPositionKnown,
@@ -115,7 +118,20 @@
 {#each stationMarkerElems as marker, index}
 	{@const station = getStation(index)}
 	<div bind:this={marker}>
-		<div class="mapboxgl-station-location">
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div
+			class="mapboxgl-station-location"
+			class:hovered={hoveredStationId == station.id}
+			on:pointerover={() => {
+				hoveredStationId = station.id;
+			}}
+			on:pointerout={() => {
+				hoveredStationId = null;
+			}}
+			on:click={() => {
+				selectedStationId = station.id;
+			}}
+		>
 			<div class="mapboxgl-station-location-inner">
 				<p class="name">{station.brand}</p>
 				{#if station.price}
@@ -216,8 +232,7 @@
 		@include glass;
 		$bg-color: black;
 		$bg-color: color.scale($bg-color, $alpha: -57%);
-		$border-color: $primary;
-
+		$border-color: transparent; //color.scale($primary, $alpha: -50%);
 		$blur-radius: 8px;
 		position: relative;
 		background: $bg-color;
@@ -277,6 +292,16 @@
 					white-space: nowrap;
 					overflow: hidden;
 				}
+			}
+		}
+		&.hovered {
+			$border-color: $primary;
+			border: 1px solid $border-color;
+			&:before {
+				border-color: rgba(175, 219, 202, 0);
+				border-top-color: $border-color;
+				border-width: 12px;
+				margin-left: -12px;
 			}
 		}
 	}

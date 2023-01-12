@@ -1,8 +1,9 @@
 <script lang="ts">
 	export let onClick: (() => void | Promise<void>) | null = null;
+	export let important = false;
 </script>
 
-<button class="card" on:click={onClick}>
+<button class="card" class:important on:click={onClick}>
 	<slot />
 </button>
 
@@ -17,6 +18,14 @@
 		padding: 1rem;
 		width: 100%;
 		height: 100%;
+		&.important {
+			&,
+			&:focus,
+			&:active,
+			&:hover {
+				border: 1px solid $primary;
+			}
+		}
 		// box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
 		// border: 1px solid $primary;
 	}

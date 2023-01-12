@@ -35,11 +35,21 @@
 	let footerElem: GlassBottomSlide;
 
 	const collapseFooter = () => (footerElem.values.compressed = true);
+
+	let selectedStationId: string | null = null;
+	let hoveredStationId: string | null = null;
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div id="map" on:click={collapseFooter} on:touchmove={collapseFooter}>
-	<Map api_key={data.mapbox_api_key} bind:rotation bind:setRotation bind:center />
+	<Map
+		api_key={data.mapbox_api_key}
+		bind:rotation
+		bind:setRotation
+		bind:center
+		bind:selectedStationId
+		bind:hoveredStationId
+	/>
 </div>
 
 <GlassRefreshButton
@@ -81,9 +91,22 @@
 		<h2 style="padding: 2rem 2rem 0 2rem">Tankstellen in der Nähe</h2>
 		<div id="stations">
 			{#each $nearbyStations as station}
-				<div class="station">
+				<div
+					class="station"
+					on:pointerover={() => {
+						hoveredStationId = station.id;
+					}}
+					on:pointerout={() => {
+						hoveredStationId = null;
+					}}
+				>
 					<!-- TODO: highlight on map (on hover) and vice versa (simply add a 'selected' var and set and compare) -->
-					<Card onClick={() => goto(`/station/${station.id}`)}>
+					<Card
+						onClick={() => {
+							selectedStationId = station.id;
+						}}
+						important={hoveredStationId == station.id}
+					>
 						<Station {station} />
 					</Card>
 				</div>
