@@ -30,6 +30,11 @@
 		<div id="name-wrapper">
 			<h3 id="name">{station.name}</h3>
 			<h6 id="brand">{station.brand}</h6>
+			{#if !station.isOpen}
+				<div class="closed">
+					<p>geschlossen</p>
+				</div>
+			{/if}
 		</div>
 		{#if dist}
 			<div id="distance">
@@ -69,6 +74,13 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: top;
+		.closed {
+			padding: 0;
+			margin: -10px;
+			margin-left: 0;
+			color: red;
+			font-size: x-small;
+		}
 	}
 
 	#name-wrapper {
