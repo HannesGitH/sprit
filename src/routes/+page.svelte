@@ -12,7 +12,7 @@
 		start as getPosition,
 		type PositionWithRadius
 	} from '$lib/helpers/position';
-	import { nearbyStations, updateNearbyStations } from '$lib/helpers/stores';
+	import { orderedStations, SortBy, sortBy, updateNearbyStations } from '$lib/helpers/stores';
 	import GlassRefreshButton from '$lib/components/glassRefreshButton.svelte';
 	import Station from '$lib/components/station.svelte';
 	import Card from '$lib/components/card.svelte';
@@ -46,9 +46,11 @@
 		{ name: 'e10', selected: false }
 	];
 	$: selectedFuels = possibilities.filter((p) => p.selected).map((p) => p.name);
-	$: fuelType = selectedFuels.length > 1 ? 'all' : selectedFuels[0]; //could be improved
-	// $: selectedFuels, updateNearbyStations({...center, type:fuelType as any});
-	//TODO: sort by fueltype price etc
+	$: fuelType = selectedFuels.length <= 0 ? 'all' : selectedFuels[0]; //could be improved
+	$: sortBy.set(
+		{ all: SortBy.DISTANCE, diesel: SortBy.DIESEL, e5: SortBy.E5, e10: SortBy.E10 }[fuelType] ??
+			SortBy.E5
+	);
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -98,19 +100,19 @@
 </GlassSideButton>
 
 <GlassBottomSlide bind:this={footerElem}>
-	{#if $nearbyStations && $nearbyStations.length > 0}
+	{#if $orderedStations && $orderedStations.length > 0}
 		<div id="header">
 			<h2 style="padding: 2rem 2rem 0 2rem">Tankstellen in der Nähe</h2>
 			<div>
 				<Taglist radio bind:possibilities />
-				<p style="font-size: xx-small; position:absolute; top:0; right:2rem;">
+				<!-- <p style="font-size: xx-small; position:absolute; top:0; right:2rem;">
 					sorry, noch ohne funktion
-				</p>
+				</p> -->
 			</div>
 		</div>
 
 		<div id="stations">
-			{#each $nearbyStations as station}
+			{#each $orderedStations as station}
 				<div
 					class="station"
 					on:pointerover={() => {

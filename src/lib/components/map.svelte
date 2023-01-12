@@ -16,7 +16,7 @@
 		distance,
 		type PositionWithRadius
 	} from '$lib/helpers/position';
-	import { nearbyStations } from '$lib/helpers/stores';
+	import { orderedStations } from '$lib/helpers/stores';
 
 	import mapboxgl from 'mapbox-gl';
 	let map: mapboxgl.Map;
@@ -70,20 +70,23 @@
 
 	let stationMarkersDirty = false;
 	let stationMarkers: mapboxgl.Marker[] = [];
-	let stationMarkerElems: HTMLElement[] = [];
+	let stationMarkerElems: { station: Station | any; elem: HTMLElement }[] = [];
 
 	let chosenFuel: 'all' | 'diesel' | 'e5' | 'e10' = 'all';
 
-	import type { MultiplePriceStation, SinglePriceStation } from '$lib/helpers/tankerkoenig.server';
+	import type { Station } from '$lib/helpers/tankerkoenig.server';
 	import Price from './marker/price.svelte';
 
-	nearbyStations.subscribe(async ($nearbyStations) => {
-		if (map && $nearbyStations && Array.isArray($nearbyStations)) {
+	orderedStations.subscribe(async ($orderedStations) => {
+		if (map && $orderedStations && Array.isArray($orderedStations)) {
 			stationMarkers.forEach((marker) => {
 				marker.remove();
 			});
 
-			stationMarkerElems = $nearbyStations.map((station) => document.createElement('div'));
+			stationMarkerElems = $orderedStations.map((station) => ({
+				station,
+				elem: document.createElement('div')
+			}));
 			stationMarkersDirty = true;
 		}
 	});
@@ -91,11 +94,11 @@
 	afterUpdate(() => {
 		if (!stationMarkersDirty) return;
 		stationMarkersDirty = false;
-		stationMarkers = $nearbyStations.map((station, i) => {
+		stationMarkers = $orderedStations.map((station, i) => {
 			return new mapboxgl.Marker({
 				color: 'green',
 				draggable: false,
-				element: stationMarkerElems[i],
+				element: stationMarkerElems[i].elem,
 				anchor: 'bottom'
 			})
 				.setLngLat([station.lng, station.lat])
@@ -103,7 +106,18 @@
 		});
 	});
 
-	const getStation: any = (idx: number) => $nearbyStations[idx]; //sadly we need to erase the type for the stuff outside script to work, see https://github.com/sveltejs/svelte/issues/4701
+	$: indexOfHoveredStation = $orderedStations.findIndex(
+		(station) => station.id == hoveredStationId
+	);
+
+	// const modifiedIndex = (idx: number) => {
+	// 	if (hoveredStationId != null) {
+	// 		if (idx == $orderedStations.length - 1) return indexOfHoveredStation;
+	// 		return idx >= indexOfHoveredStation ? idx + 1 : idx;
+	// 	}
+	// 	return idx;
+	// };
+	// const getStation: any = (idx: number) => $orderedStations[idx];//sadly we need to erase the type for the stuff outside script to work, see https://github.com/sveltejs/svelte/issues/4701
 </script>
 
 <svelte:head>
@@ -113,9 +127,9 @@
 <div id="map-mapboxgl-canvas-koshjdf" />
 
 <!-- sadly we can't use bind:this on dynamic lists -->
-{#each stationMarkerElems as marker, index}
-	{@const station = getStation(index)}
-	<div bind:this={marker}>
+{#each stationMarkerElems as marker}
+	{@const station = marker.station}
+	<div bind:this={marker.elem}>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
 			class="mapboxgl-station-location"
@@ -230,7 +244,7 @@
 		@include glass;
 		$bg-color: black;
 		$bg-color: color.scale($bg-color, $alpha: -57%);
-		$border-color: transparent; //color.scale($primary, $alpha: -50%);
+		$border-color: $accent; //color.scale($primary, $alpha: -50%);
 		$blur-radius: 8px;
 		position: relative;
 		background: $bg-color;
@@ -293,8 +307,6 @@
 			}
 		}
 
-		position: absolute;
-		z-index: 0;
 		&.hovered {
 			$border-color: $primary;
 			border: 1px solid $border-color;

@@ -31,3 +31,22 @@ export const updateNearbyStations = async (pos: PositionWithRadius | StationPara
 		nearbyStations.set(stations);
 	}
 };
+
+export enum SortBy {
+	DISTANCE = 'distance',
+	DIESEL = 'diesel',
+	E5 = 'e5',
+	E10 = 'e10'
+}
+
+export const sortBy = writable<SortBy>(SortBy.DISTANCE);
+
+export const orderedStations = derived([nearbyStations, sortBy], ([$nearbyStations, $sortBy]) => {
+	return [...$nearbyStations].sort((a, b) => {
+		if ($sortBy === SortBy.DISTANCE) {
+			return a.dist - b.dist;
+		} else {
+			return ((a as any)[$sortBy] ?? 0) - ((b as any)[$sortBy] ?? 0);
+		}
+	});
+});
