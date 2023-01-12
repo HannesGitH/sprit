@@ -33,10 +33,12 @@
 	let setRotation: (value: number) => void;
 
 	let footerElem: GlassBottomSlide;
+
+	const collapseFooter = () => (footerElem.values.compressed = true);
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div id="map" on:click={() => (footerElem.values.compressed = true)}>
+<div id="map" on:click={collapseFooter} on:touchmove={collapseFooter}>
 	<Map api_key={data.mapbox_api_key} bind:rotation bind:setRotation bind:center />
 </div>
 
