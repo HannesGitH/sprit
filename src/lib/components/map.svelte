@@ -74,6 +74,7 @@
 
 	import type { Station } from '$lib/helpers/tankerkoenig.server';
 	import Price from './marker/price.svelte';
+	import Card from './card.svelte';
 
 	orderedStations.subscribe(async ($orderedStations) => {
 		if (map && $orderedStations && Array.isArray($orderedStations)) {
@@ -81,8 +82,8 @@
 				marker.remove();
 			});
 
-			stationMarkerElems = $orderedStations.map((station) => ({
-				station,
+			stationMarkerElems = $orderedStations.map((station, i) => ({
+				station: station,
 				elem: document.createElement('div')
 			}));
 			stationMarkersDirty = true;
@@ -92,21 +93,19 @@
 	afterUpdate(() => {
 		if (!stationMarkersDirty) return;
 		stationMarkersDirty = false;
-		stationMarkers = $orderedStations.map((station, i) => {
+		stationMarkers = $orderedStations.map((_, i) => {
+			const elemSta = stationMarkerElems[/*modifiedIndex(i)*/ i];
+			const station = elemSta.station;
 			return new mapboxgl.Marker({
 				color: 'green',
 				draggable: false,
-				element: stationMarkerElems[i].elem,
+				element: elemSta.elem,
 				anchor: 'bottom'
 			})
 				.setLngLat([station.lng, station.lat])
 				.addTo(map);
 		});
 	});
-
-	$: indexOfHoveredStation = $orderedStations.findIndex(
-		(station) => station.id == hoveredStationId
-	);
 
 	// const modifiedIndex = (idx: number) => {
 	// 	if (hoveredStationId != null) {
@@ -115,7 +114,23 @@
 	// 	}
 	// 	return idx;
 	// };
-	// const getStation: any = (idx: number) => $orderedStations[idx];//sadly we need to erase the type for the stuff outside script to work, see https://github.com/sveltejs/svelte/issues/4701
+
+	// const resorted = () => {
+	// 	// const indexOfHoveredStation = -1
+	// 	// $orderedStations.findIndex(
+	// 	// 	(station) => station.id == hoveredStationId
+	// 	// );
+	// 	// return [
+	// 	// 	// ...([...stationMarkerElems].filter((_, i) => i != indexOfHoveredStation)),
+	// 	// 	// // ...stationMarkerElems, //This already triggers infinite rebuild
+	// 	// 	...(indexOfHoveredStation == -1 ? [] : [stationMarkerElems[indexOfHoveredStation]])
+	// 	// ];
+	// 	return stationMarkerElems;
+	// };
+
+	// $: resorted = [...(stationMarkerElems.filter((_, i) => i != indexOfHoveredStation)), ...( indexOfHoveredStation == -1 ? [] : [stationMarkerElems[indexOfHoveredStation]])];
+
+	// const getStation: any = (idx: number) => $orderedStations[modifiedIndex(idx)];//sadly we need to erase the type for the stuff outside script to work, see https://github.com/sveltejs/svelte/issues/4701
 </script>
 
 <svelte:head>
@@ -125,6 +140,8 @@
 <div id="map-mapboxgl-canvas-koshjdf" />
 
 <!-- sadly we can't use bind:this on dynamic lists -->
+
+<!-- {@debug resorted} -->
 {#each stationMarkerElems as marker}
 	{@const station = marker.station}
 	<div bind:this={marker.elem}>
