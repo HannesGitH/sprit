@@ -72,31 +72,29 @@
 </GlassSideButton>
 
 <GlassBottomSlide>
-	<div class="content masked-overflow">
-		{#if $nearbyStations && $nearbyStations.length > 0}
-			<h2 style="padding: 2rem 2rem 0 2rem">Tankstellen in der Nähe</h2>
-			<div id="stations">
-				{#each $nearbyStations as station}
-					<div class="station">
-						<!-- TODO: highlight on map (on hover) and vice versa (simply add a 'selected' var and set and compare) -->
-						<Card onClick={() => goto(`/station/${station.id}`)}>
-							<Station {station} />
-						</Card>
-					</div>
-				{/each}
-			</div>
-		{:else}
-			<div style="padding: 2rem">
-				<h1>Sprit</h1>
-				<p>
-					Verschiebe den Kartenauschnitt und drücke oben auf <i>hier suchen</i> oder
-					<button id="activate-location-text-button" on:click={(e) => getPosition()}
-						>aktiviere den Standort</button
-					>.
-				</p>
-			</div>
-		{/if}
-	</div>
+	{#if $nearbyStations && $nearbyStations.length > 0}
+		<h2 style="padding: 2rem 2rem 0 2rem">Tankstellen in der Nähe</h2>
+		<div id="stations">
+			{#each $nearbyStations as station}
+				<div class="station">
+					<!-- TODO: highlight on map (on hover) and vice versa (simply add a 'selected' var and set and compare) -->
+					<Card onClick={() => goto(`/station/${station.id}`)}>
+						<Station {station} />
+					</Card>
+				</div>
+			{/each}
+		</div>
+	{:else}
+		<div style="padding: 2rem">
+			<h1>Sprit</h1>
+			<p>
+				Verschiebe den Kartenauschnitt und drücke oben auf <i>hier suchen</i> oder
+				<button id="activate-location-text-button" on:click={(e) => getPosition()}
+					>aktiviere den Standort</button
+				>.
+			</p>
+		</div>
+	{/if}
 </GlassBottomSlide>
 
 <style lang="scss">
@@ -158,89 +156,16 @@
 			color: $primary;
 		}
 	}
-	.content {
-		max-height: 70vh;
-		overflow-y: scroll;
-		#stations {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-			grid-template-rows: 1fr max-content;
-			grid-gap: 1rem;
-			padding: 1rem;
-			.station {
-				height: 100%;
-				width: 100%;
-			}
-		}
-	}
-	.masked-overflow {
-		/* scroll bar width, for use in mask calculations */
-		--scrollbar-width: 8px;
 
-		/* mask fade distance, for use in mask calculations */
-		--mask-height: 32px;
-
-		/* If content exceeds height of container, overflow! */
-		overflow-y: auto;
-
-		/* Our height limit */
-		// height: 300px;
-
-		/* Need to make sure container has bottom space,
-	  otherwise content at the bottom is always faded out */
-		padding-bottom: var(--mask-height);
-
-		/* Keep some space between content and scrollbar */
-		// padding-right: 20px;
-
-		/* The CSS mask */
-
-		/* The content mask is a linear gradient from top to bottom */
-		--mask-image-content: linear-gradient(
-			to bottom,
-			transparent,
-			black var(--mask-height),
-			black calc(100% - var(--mask-height)),
-			transparent
-		);
-
-		/* Here we scale the content gradient to the width of the container
-	  minus the scrollbar width. The height is the full container height */
-		--mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
-
-		/* The scrollbar mask is a black pixel */
-		--mask-image-scrollbar: linear-gradient(black, black);
-
-		/* The width of our black pixel is the width of the scrollbar.
-	  The height is the full container height */
-		--mask-size-scrollbar: var(--scrollbar-width) 100%;
-
-		/* Apply the mask image and mask size variables */
-		mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
-		mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
-
-		/* Position the content gradient in the top left, and the
-	  scroll gradient in the top right */
-		mask-position: 0 0, 100% 0;
-
-		/* We don't repeat our mask images */
-		mask-repeat: no-repeat, no-repeat;
-
-		scrollbar-width: thin; /* can also be normal, or none, to not render scrollbar */
-		scrollbar-color: currentColor transparent;
-
-		/* Webkit / Blink */
-		&::-webkit-scrollbar {
-			width: var(--scrollbar-width);
-		}
-
-		&::-webkit-scrollbar-thumb {
-			background-color: currentColor;
-			border-radius: 9999px; /* always round */
-		}
-
-		&::-webkit-scrollbar-track {
-			background-color: transparent;
+	#stations {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+		grid-template-rows: 1fr max-content;
+		grid-gap: 1rem;
+		padding: 1rem;
+		.station {
+			height: 100%;
+			width: 100%;
 		}
 	}
 </style>
