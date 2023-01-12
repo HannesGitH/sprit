@@ -107,6 +107,7 @@
 		});
 	});
 
+	//TODO: render the hovered elemt last so its on top, couldnt get it to work..
 	// const modifiedIndex = (idx: number) => {
 	// 	if (hoveredStationId != null) {
 	// 		if (idx == $orderedStations.length - 1) return indexOfHoveredStation;
