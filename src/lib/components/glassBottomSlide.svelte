@@ -5,23 +5,72 @@
 	// 	duration: 100,
 	// 	easing: easing
 	// });
+
+	export const values = {
+		set compressed(newVal: boolean) {
+			this._isCompressed = newVal;
+			compression.set(newVal ? 1 : 0);
+		},
+		get compressed() {
+			return this._isCompressed;
+		},
+		_isCompressed: false
+	};
 	const compression = spring(0, {
 		stiffness: 0.1,
 		damping: 0.5
 	});
-	const onScroll = (scrollEvent: Event) => {
-		if (scrollEvent instanceof WheelEvent) {
-			if (scrollEvent.deltaY < 0 && wrapper.scrollTop <= 0) {
-				compression.set(1);
+	let lastY: number | null = null;
+	function getDragDeltaY(event: MouseEvent | TouchEvent): number {
+		if (event instanceof MouseEvent) {
+			return event.movementY;
+		} else if (event instanceof TouchEvent) {
+			if (lastY === null) {
+				lastY = event.touches[0].pageY;
+				return 0;
 			} else {
-				compression.set(0);
+				const delta = event.touches[0].pageY - lastY;
+				lastY = event.touches[0].pageY;
+				return -delta;
+			}
+		}
+		//should be unreachable
+		return 0;
+	}
+
+	const onTouchStart = (evt: TouchEvent) => {
+		lastY = evt.touches[0].pageY;
+	};
+	const onTouchEnd = (evt: TouchEvent) => {
+		lastY = null;
+	};
+
+	const onScroll = (scrollEvent: Event) => {
+		const margin = 0;
+		if (scrollEvent instanceof WheelEvent || scrollEvent instanceof TouchEvent) {
+			const dragDelta = getDragDeltaY(scrollEvent as TouchEvent);
+			// console.log(getDragDeltaY(scrollEvent as TouchEvent), (scrollEvent as WheelEvent).deltaY);
+			if (
+				(scrollEvent as WheelEvent).deltaY < -margin ||
+				(dragDelta < -margin / 10 && wrapper.scrollTop <= 0)
+			) {
+				values.compressed = true;
+			} else if ((scrollEvent as WheelEvent).deltaY > margin || dragDelta > margin / 10) {
+				values.compressed = false;
 			}
 		}
 	};
 	let wrapper: HTMLElement;
 </script>
 
-<div id="wrapper" style="--compression: {$compression};" on:wheel={onScroll}>
+<div
+	id="wrapper"
+	style="--compression: {$compression};"
+	on:wheel={onScroll}
+	on:touchmove={onScroll}
+	on:touchstart={onTouchStart}
+	on:touchend={onTouchEnd}
+>
 	<div class="content masked-overflow" bind:this={wrapper}>
 		<slot />
 	</div>

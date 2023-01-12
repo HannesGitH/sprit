@@ -31,9 +31,12 @@
 
 	let rotation = 0;
 	let setRotation: (value: number) => void;
+
+	let footerElem: GlassBottomSlide;
 </script>
 
-<div id="map">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div id="map" on:click={() => (footerElem.values.compressed = true)}>
 	<Map api_key={data.mapbox_api_key} bind:rotation bind:setRotation bind:center />
 </div>
 
@@ -71,7 +74,7 @@
 	</div>
 </GlassSideButton>
 
-<GlassBottomSlide>
+<GlassBottomSlide bind:this={footerElem}>
 	{#if $nearbyStations && $nearbyStations.length > 0}
 		<h2 style="padding: 2rem 2rem 0 2rem">Tankstellen in der Nähe</h2>
 		<div id="stations">
