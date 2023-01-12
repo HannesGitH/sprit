@@ -16,7 +16,7 @@
 		distance,
 		type PositionWithRadius
 	} from '$lib/helpers/position';
-	import { orderedStations } from '$lib/helpers/stores';
+	import { orderedStations, SortBy, sortBy } from '$lib/helpers/stores';
 
 	import mapboxgl from 'mapbox-gl';
 	let map: mapboxgl.Map;
@@ -71,8 +71,6 @@
 	let stationMarkersDirty = false;
 	let stationMarkers: mapboxgl.Marker[] = [];
 	let stationMarkerElems: { station: Station | any; elem: HTMLElement }[] = [];
-
-	let chosenFuel: 'all' | 'diesel' | 'e5' | 'e10' = 'all';
 
 	import type { Station } from '$lib/helpers/tankerkoenig.server';
 	import Price from './marker/price.svelte';
@@ -148,13 +146,13 @@
 				<p class="name">{station.brand}</p>
 				{#if station.price}
 					<p class="price">{station.price}€</p>
-					<Price name={chosenFuel} price={station.price} />
-				{:else if chosenFuel === 'all'}
-					<Price name="Diesel" price={station.diesel} />
+					<Price name="Preis" price={station.price} />
+				{:else if $sortBy === SortBy.DISTANCE}
+					<Price name="diesel" price={station.diesel} />
 					<Price name="e5" price={station.e5} />
 					<Price name="e10" price={station.e10} />
 				{:else}
-					<Price name={chosenFuel} price={station[chosenFuel]} />
+					<Price price={station[$sortBy]} />
 				{/if}
 			</div>
 			<div id="shadow" />

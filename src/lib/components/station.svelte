@@ -14,12 +14,14 @@
 	$: products = (station as SinglePriceStation).price
 		? [{ name: 'price', price: (station as SinglePriceStation).price }]
 		: ((s: MultiplePriceStation) => [
-				{ name: 'Diesel', price: s.diesel },
+				{ name: 'diesel', price: s.diesel },
 				{ name: 'e5', price: s.e5 },
 				{ name: 'e10', price: s.e10 }
 		  ])(station as MultiplePriceStation);
 
 	$: detailedStation = station as DetailedStation;
+
+	import { sortBy } from '$lib/helpers/stores';
 	//TODO: add icons
 </script>
 
@@ -37,7 +39,7 @@
 	</div>
 	<div class="prices">
 		{#each products as product}
-			<div class="price">
+			<div class="price" class:selected={$sortBy == product.name}>
 				<Price name={product.name} price={product.price} />
 			</div>
 		{/each}
@@ -53,7 +55,7 @@
 	{/if} -->
 </div>
 
-<style>
+<style lang="scss">
 	.card {
 		display: flex;
 		flex-direction: column;
@@ -88,25 +90,29 @@
 		position: absolute;
 		right: 1rem;
 		top: 1rem;
-	}
-
-	#distance p {
-		padding-left: 1rem;
-		margin: 0;
-	}
-	#distance p::after {
-		font-size: 0.5rem;
-		font-weight: 300;
-		content: ' km';
+		p {
+			padding-left: 1rem;
+			margin: 0;
+			&::after {
+				font-size: 0.5rem;
+				font-weight: 300;
+				content: ' km';
+			}
+		}
 	}
 
 	.prices {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-	}
-	.price {
-		height: max-content;
-		width: max-content;
+		.price {
+			padding-top: 0.8rem;
+			height: 1.8rem;
+			width: max-content;
+			&.selected {
+				color: $primary;
+				scale: 1.2;
+			}
+		}
 	}
 </style>
